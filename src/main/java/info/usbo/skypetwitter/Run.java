@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -37,8 +36,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -67,7 +64,7 @@ public class Run {
 	private static ArrayList<VK> vk = new ArrayList<VK>();
 	private static String work_dir;
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws SkypeException {
 		System.out.println("Working Directory = " + System.getProperty("user.dir"));
 		Properties props;
 		props = (Properties) System.getProperties().clone();
@@ -94,7 +91,7 @@ public class Run {
 			*/
 			SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 			System.out.println("Looking at " + sdf.format(Calendar.getInstance().getTime()));
-			Chat ch = Chat.getInstance(chat_group_id);
+			Chat ch = Skype.chat(chat_group_id);
 			Twitter twitter = new TwitterFactory().getInstance();
 			try {
 				List<Status> statuses;
