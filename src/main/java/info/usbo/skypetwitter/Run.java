@@ -21,10 +21,10 @@ import com.skype.Skype;
 import com.skype.SkypeException;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -63,13 +63,12 @@ public class Run {
 
     private static String data_dir;
 
-    public static void main(String[] args) throws SkypeException {
+    public static void main(String[] args) throws SkypeException, IOException {
         System.out.println("Working Directory = " + System.getProperty("user.dir"));
-        Properties props = (Properties) System.getProperties().clone();
-        String prop_dir = System.getProperty("user.dir");
-        loadProperties(props, prop_dir + "\\twitter4j.properties");
-        loadProperties(props, prop_dir + "\\skype.properties");
-        loadProperties(props, prop_dir + "\\app.properties");
+        Properties props = new Properties();
+        loadProperties(props, "twitter4j.properties");
+        loadProperties(props, "skype.properties");
+        loadProperties(props, "app.properties");
         String chat_group_id = props.getProperty("skype.chat_group_id");
         String twitter_user_id = props.getProperty("twitter.user");
         data_dir = props.getProperty("data.dir");
@@ -224,26 +223,10 @@ public class Run {
         return 1;
     }
 
-    private static boolean loadProperties(Properties props, String path) {
-        FileInputStream fis = null;
-        try {
-            File file = new File(path);
-            if (file.exists() && file.isFile()) {
-                fis = new FileInputStream(file);
-                props.load(fis);
-                return true;
-            }
-        } catch (Exception ignore) {
-        } finally {
-            try {
-                if (fis != null) {
-                    fis.close();
-                }
-            } catch (IOException ignore) {
-
-            }
-        }
-        return false;
+    private static void loadProperties(Properties props, String path) throws IOException {
+        InputStream in = Run.class.getResourceAsStream("/" + path);
+        props.load(in);
+        in.close();
     }
 
     private static void vk() throws ParseException {
