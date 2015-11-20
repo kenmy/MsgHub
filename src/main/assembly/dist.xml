@@ -1,0 +1,40 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0">
+  <id>distribution</id>
+  <formats>
+    <format>zip</format>
+  </formats>
+
+  <dependencySets>
+    <dependencySet>
+      <useProjectArtifact>false</useProjectArtifact>
+      <useTransitiveDependencies>false</useTransitiveDependencies>
+      <unpack>false</unpack>
+      <scope>runtime</scope>
+      <fileMode>0755</fileMode>
+      <directoryMode>0755</directoryMode>
+      <outputDirectory>bin</outputDirectory>
+
+      <includes>
+        <include>info.usbo.skypetwitter:Run</include>
+      </includes>
+
+    </dependencySet>
+    <dependencySet>
+      <useProjectArtifact>false</useProjectArtifact>
+      <useTransitiveDependencies>true</useTransitiveDependencies>
+      <unpack>false</unpack>
+      <scope>runtime</scope>
+      <fileMode>0644</fileMode>
+      <directoryMode>0755</directoryMode>
+      <outputDirectory>lib</outputDirectory>
+
+      <includes>
+        <include>junit:junit</include>
+        <include>com.googlecode.json-simple:json-simple</include>
+        <include>com.github.taksan:skype-java-api</include>
+        <include>org.twitter4j:twitter4j-core</include>
+      </includes>
+
+    </dependencySet>
+  </dependencySets>
+</assembly>
