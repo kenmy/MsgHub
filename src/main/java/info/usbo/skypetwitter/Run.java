@@ -19,7 +19,7 @@ package info.usbo.skypetwitter;
 import com.skype.Chat;
 import com.skype.Skype;
 import com.skype.SkypeException;
-import static com.sun.org.apache.xalan.internal.lib.ExsltDatetime.date;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,10 +36,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+
 import twitter4j.MediaEntity;
 import twitter4j.Status;
 import twitter4j.Twitter;
@@ -53,26 +55,25 @@ import twitter4j.URLEntity;
  */
 public class Run {
 	
-	private static String chat_group_id = "#ChatGroupID/Depersonilized"; //real
-	private static String twitter_user_id;
-	private static Integer twitter_timeout;
-	
 	private static Integer bChanged;
 	
 	private static ArrayList<Long> twitter_ids = new ArrayList<Long>();
 	private static ArrayList<Long> vk_ids = new ArrayList<Long>();
 	private static ArrayList<VK> vk = new ArrayList<VK>();
-	private static String work_dir;
+	
+	private static String data_dir;
 	
 	public static void main(String[] args) throws SkypeException {
 		System.out.println("Working Directory = " + System.getProperty("user.dir"));
-		Properties props;
-		props = (Properties) System.getProperties().clone();
-		//loadProperties(props, "D:\\Data\\Java\\classpath\\twitter.props");
-		work_dir = System.getProperty("user.dir");
-		loadProperties(props, work_dir + "\\twitter.props");
-		twitter_user_id = props.getProperty("twitter.user");
-		twitter_timeout = Integer.parseInt(props.getProperty("twitter.timeout"));
+		Properties props = (Properties) System.getProperties().clone();
+		String prop_dir = System.getProperty("user.dir");
+		loadProperties(props, prop_dir + "\\twitter4j.properties");
+        loadProperties(props, prop_dir + "\\skype.properties");
+        loadProperties(props, prop_dir + "\\app.properties");
+        String chat_group_id = props.getProperty("skype.chat_group_id");		
+        String twitter_user_id = props.getProperty("twitter.user");
+		data_dir = props.getProperty("data.dir");      
+		Integer twitter_timeout = Integer.parseInt(props.getProperty("twitter.timeout"));
 		System.out.println("Twitter user: " + twitter_user_id);
 		System.out.println("Twitter timeout: " + twitter_timeout);
 		if ("".equals(twitter_user_id)) {
@@ -84,11 +85,6 @@ public class Run {
 		}
 		while (true) {
 			bChanged = 0;
-			/*
-			create_id();
-			Chat ch = Chat.getInstance(chat_group_id);
-			ch.send("Привет!");
-			*/
 			SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 			System.out.println("Looking at " + sdf.format(Calendar.getInstance().getTime()));
 			Chat ch = Skype.chat(chat_group_id);
@@ -96,10 +92,8 @@ public class Run {
 			try {
 				List<Status> statuses;
 				statuses = twitter.getUserTimeline(twitter_user_id);
-				//System.out.println("Showing @" + twitter_user_id + "'s user timeline.");
 				String sText;
 				for (Status status : statuses) {
-					//System.out.println(status.getId());
 					Date d = status.getCreatedAt();
 					// Добавим  часов
 					Calendar cal = Calendar.getInstance(); 
@@ -170,16 +164,10 @@ public class Run {
 			}
 		}
     }
-	
-	public static void create_id() throws Exception  {
-		Chat ch = Skype.chat("Depersonilized1, Depersonilized2");
-		String id = ch.getId();
-		System.out.println(id);
-	}
-	
+
 	public static void save_file() {
 		try{
-         FileOutputStream fos= new FileOutputStream(work_dir + "\\twitter_ids.data");
+         FileOutputStream fos= new FileOutputStream(data_dir + "\\twitter_ids.data");
          ObjectOutputStream oos= new ObjectOutputStream(fos);
          oos.writeObject(twitter_ids);
          oos.close();
@@ -189,7 +177,7 @@ public class Run {
         }
 		
 		try{
-         FileOutputStream fos= new FileOutputStream(work_dir + "\\vk_ids.data");
+         FileOutputStream fos= new FileOutputStream(data_dir + "\\vk_ids.data");
          ObjectOutputStream oos= new ObjectOutputStream(fos);
          oos.writeObject(vk_ids);
          oos.close();
@@ -199,13 +187,14 @@ public class Run {
         }
 	}
 	
-	public static int load_file() {
+	@SuppressWarnings("unchecked")
+    public static int load_file() {
 		// TWITTER
 		try
         {
-            FileInputStream fis = new FileInputStream(work_dir + "\\twitter_ids.data");
+            FileInputStream fis = new FileInputStream(data_dir + "\\twitter_ids.data");
             ObjectInputStream ois = new ObjectInputStream(fis);
-            twitter_ids = (ArrayList) ois.readObject();
+            twitter_ids = (ArrayList<Long>) ois.readObject();
             ois.close();
             fis.close();
          }catch(IOException ioe){
@@ -219,9 +208,9 @@ public class Run {
 		// VK
 		try
         {
-            FileInputStream fis = new FileInputStream(work_dir + "\\vk_ids.data");
+            FileInputStream fis = new FileInputStream(data_dir + "\\vk_ids.data");
             ObjectInputStream ois = new ObjectInputStream(fis);
-            vk_ids = (ArrayList) ois.readObject();
+            vk_ids = (ArrayList<Long>) ois.readObject();
             ois.close();
             fis.close();
          }catch(IOException ioe){
