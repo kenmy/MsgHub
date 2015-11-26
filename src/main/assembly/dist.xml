@@ -15,7 +15,7 @@
       <outputDirectory>.</outputDirectory>
 
       <includes>
-        <include>info.usbo:skypetwitter</include>
+        <include>com.epam:messagehub</include>
       </includes>
 
     </dependencySet>
