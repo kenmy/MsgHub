@@ -29,8 +29,19 @@ public class MsgHub {
     public static void main(String[] args){
         try {
             PropertiesReader props = PropertiesReader.getReader();
-            Writer writer = new SkypeWriter(props.getProperty("skype.chat_group_id"));
-            Reader reader = new TwitterReader(props.getProperty("twitter.user"));
+            Writer writer = null;
+            Boolean IsTest = true;
+            if (IsTest){
+                writer = new ConsoleWriter();
+            } else {
+                writer = new SkypeWriter(props.getProperty("skype.chat_group_id"));
+            }
+            Reader reader = null;
+            if (IsTest){
+                reader = new VKReader(Long.valueOf(props.getProperty("vk.groupID")));
+            } else {
+                reader = new TwitterReader(props.getProperty("twitter.user"));
+            }
             Saver saver = new MemorySaver();
             MsgHub msgHub = new MsgHub(reader, writer, saver);
             msgHub.doCheck();

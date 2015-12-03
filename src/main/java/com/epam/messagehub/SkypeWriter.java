@@ -10,7 +10,10 @@ public class SkypeWriter implements Writer {
     private Chat ch; 
     
     SkypeWriter(String skype_chat_id) throws IOException, SkypeException{
-        ch = Skype.chat(skype_chat_id);
+        for (Chat ch : Skype.getAllChats()){
+            System.out.println(ch.getId());
+        }
+        ch = Skype.chat(skype_chat_id.split(";"));
     }
     @Override
     public void writeMessage(Message msg) {
