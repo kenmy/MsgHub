@@ -8,7 +8,7 @@ import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 
-public class TwitterReader implements IReader {
+public class TwitterReader implements Reader {
 
     private Twitter twitter;
     private String twitter_user_id;
@@ -18,8 +18,8 @@ public class TwitterReader implements IReader {
         twitter_user_id = atwitter_user_id;
     }
     @Override
-    public List<IMessage> getMessages() {
-        List<IMessage> result = new ArrayList<IMessage>(); 
+    public List<Message> getMessages() {
+        List<Message> result = new ArrayList<Message>(); 
         List<Status> statuses;
         try {
             statuses = twitter.getUserTimeline(twitter_user_id);

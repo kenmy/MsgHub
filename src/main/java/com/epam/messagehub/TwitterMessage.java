@@ -6,7 +6,7 @@ import twitter4j.MediaEntity;
 import twitter4j.Status;
 import twitter4j.URLEntity;
 
-public class TwitterMessage implements IMessage {
+public class TwitterMessage implements Message {
 
     private String sText;
     private Long id;

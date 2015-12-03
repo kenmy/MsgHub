@@ -5,7 +5,7 @@ import com.skype.Chat;
 import com.skype.Skype;
 import com.skype.SkypeException;
 
-public class SkypeWriter implements IWriter {
+public class SkypeWriter implements Writer {
 
     private Chat ch; 
     
@@ -13,7 +13,7 @@ public class SkypeWriter implements IWriter {
         ch = Skype.chat(skype_chat_id);
     }
     @Override
-    public void writeMessage(IMessage msg) {
+    public void writeMessage(Message msg) {
         try {
             ch.send(msg.getData());
         } catch (SkypeException e) {

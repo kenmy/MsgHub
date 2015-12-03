@@ -1,6 +1,6 @@
 package com.epam.messagehub;
 
-public interface IMessage {
+public interface Message {
     String getData();
     Long getId();
 }
