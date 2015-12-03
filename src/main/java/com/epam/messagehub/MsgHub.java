@@ -1,11 +1,7 @@
 package com.epam.messagehub;
 
-import info.usbo.skypetwitter.Run;
-
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
-import java.util.Properties;
 
 import com.skype.SkypeException;
 
@@ -13,19 +9,6 @@ public class MsgHub {
     private IReader reader;
     private IWriter writer;
     private ISaver saver;
-    
-    public MsgHub() throws IOException, SkypeException{
-        Properties props = new Properties();
-        InputStream in = Run.class.getResourceAsStream("/skype.properties");
-        props.load(in);
-        in.close();
-        writer = new SkypeWriter(props.getProperty("skype.chat_group_id"));
-        in = Run.class.getResourceAsStream("/twitter4j.properties");
-        props.load(in);
-        in.close();
-        reader = new TwitterReader(props.getProperty("twitter.user"));
-        saver = new MemorySaver();
-    }
     
     public MsgHub(IReader areader, IWriter awriter, ISaver asaver){
         reader = areader;
@@ -45,7 +28,11 @@ public class MsgHub {
     
     public static void main(String[] args){
         try {
-            MsgHub msgHub = new MsgHub();
+            PropertiesReader props = PropertiesReader.getReader();
+            IWriter writer = new SkypeWriter(props.getProperty("skype.chat_group_id"));
+            IReader reader = new TwitterReader(props.getProperty("twitter.user"));
+            ISaver saver = new MemorySaver();
+            MsgHub msgHub = new MsgHub(reader, writer, saver);
             msgHub.doCheck();
         } catch (IOException | SkypeException e) {
             e.printStackTrace();
